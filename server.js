@@ -11,8 +11,8 @@ const server = new Hapi.Server();
 const connection = MySQL.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'database_name'
+    password: 'root',
+    database: 'sample'
 });
 
 
@@ -20,7 +20,8 @@ const connection = MySQL.createConnection({
 
 server.connection({
     host: 'localhost',
-    port: 8000
+    port: 8000,
+
 });
 connection.connect();
 
@@ -38,12 +39,18 @@ server.route({
     path: '/users',
     handler: function (request, reply) {
 
-        connection.query('SELECT uid, username FROM users', function (error, results, fields) {
+        connection.query('select * from customers2', function (error, results, fields) {
             if (error) throw error;
             console.log(results);
             reply(results);
         });
 
+    },
+    config: {
+        cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
     }
 });
 
