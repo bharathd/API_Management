@@ -75,6 +75,35 @@ server.route({
         }
     }
 });
+server.route({
+    method: 'POST',
+    path: '/signin',
+
+    handler: function (request, reply) {
+
+        const username = request.payload.username;
+        const password = request.payload.password;
+console.log(username);
+//        var salt = Bcrypt.genSaltSync();
+//        var encryptedPassword = Bcrypt.hashSync(password, salt);
+//     
+//        var orgPassword = Bcrypt.compareSync(password, encryptedPassword);
+
+        connection.query('SELECT * FROM login WHERE UserName = "' + username + '"'+ '"AND Password = "' + password + '"', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+    	 cors: {
+             origin: ['*'],
+             additionalHeaders: ['cache-control', 'x-requested-with']
+         }
+
+    }
+});
 
 server.route({
     method: 'POST',
@@ -83,15 +112,15 @@ server.route({
     handler: function (request, reply) {
 
         const username = request.payload.username;
-        const email = request.payload.email;
+//        const email = request.payload.email;
         const password = request.payload.password;
+console.log(username);
+//        var salt = Bcrypt.genSaltSync();
+//        var encryptedPassword = Bcrypt.hashSync(password, salt);
+//     
+//        var orgPassword = Bcrypt.compareSync(password, encryptedPassword);
 
-        var salt = Bcrypt.genSaltSync();
-        var encryptedPassword = Bcrypt.hashSync(password, salt);
-     
-        var orgPassword = Bcrypt.compareSync(password, encryptedPassword);
-
-        connection.query('INSERT INTO users (username,email,password) VALUES ("' + username + '","' + email + '","' + encryptedPassword + '")', function (error, results, fields) {
+        connection.query('INSERT INTO users (username,password) VALUES ("' + username  + '","' + encryptedPassword + '")', function (error, results, fields) {
             if (error) throw error;
             console.log(results);
             reply(results);
@@ -99,10 +128,14 @@ server.route({
 
     },
     config: {
+    	 cors: {
+             origin: ['*'],
+             additionalHeaders: ['cache-control', 'x-requested-with']
+         },
         validate: {
             payload: {
                 username: Joi.string().alphanum().min(3).max(30).required(),
-                email: Joi.string().email(),
+               
                 password: Joi.string().regex(/^[a-zA-Z0-9]{8,30}$/)
             }
         }
@@ -142,11 +175,12 @@ server.route({
     path: '/messages',
 
     handler: function (request, reply) {
-
         const uid = request.payload.uid;
+        const pwd=request.payload.pwd;
         console.log(uid);
-
-        connection.query('SELECT * FROM messages WHERE uid_fk = "' + uid + '"', function (error, results, fields) {
+        connection.query ('SELECT * FROM login WHERE UserName = "' + uid + '"AND Password = "' + pwd + '"',
+        	    function (error, results, fields) {
+        
             if (error) throw error;
             console.log(results);
             reply(results);
@@ -154,11 +188,11 @@ server.route({
 
     },
     config: {
-        validate: {
-            payload: {
-                uid: Joi.number().integer()
-            }
+    	cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
         }
+       
 
     }
 });
