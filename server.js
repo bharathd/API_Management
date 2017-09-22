@@ -12,7 +12,7 @@ const connection = MySQL.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'sample'
+    database: 'pmpd'
 });
 
 
@@ -178,7 +178,33 @@ server.route({
         const uid = request.payload.uid;
         const pwd=request.payload.pwd;
         console.log(uid);
-        connection.query ('SELECT * FROM login WHERE UserName = "' + uid + '"AND Password = "' + pwd + '"',
+        connection.query ('SELECT * FROM USER WHERE USER_NAME = "' + uid + '"AND PASSWORD = "' + pwd + '"',
+        	    function (error, results, fields) {
+        
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+    	cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
+       
+
+    }
+});
+server.route({
+    method: 'POST',
+    path: '/getprojectlist',
+
+    handler: function (request, reply) {
+        const uid = request.payload.uid;
+      
+        console.log(uid);
+        connection.query ('SELECT * FROM PROJECT WHERE USER_ID ="' + uid + '"',
         	    function (error, results, fields) {
         
             if (error) throw error;
