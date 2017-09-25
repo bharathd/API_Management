@@ -75,6 +75,26 @@ server.route({
 });
 server.route({
     method: 'GET',
+    path: '/getechnologies',
+    handler: function (request, reply) {
+        const uid = request.params.uid;
+
+        connection.query('SELECT * from technology', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+        cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
+    }
+});
+server.route({
+    method: 'GET',
     path: '/user/{uid}',
     handler: function (request, reply) {
         const uid = request.params.uid;
@@ -162,16 +182,16 @@ console.log(username);
     }
 });
 
-
 server.route({
     method: 'POST',
-    path: '/sendMessage',
-    handler: function (request, reply) {
+    path: '/gettechnoloyQA',
 
-        const uid = request.payload.uid;
-        const message = request.payload.message;
-       
-        connection.query('INSERT INTO messages (message,uid_fk) VALUES ("' + message + '","' + uid + '")', function (error, results, fields) {
+    handler: function (request, reply) {
+        const qid = request.payload.qid;
+        console.log(qid);
+        connection.query ('SELECT * FROM technology_details WHERE TECHNOLOGY_ID = "' + qid + '"AND PASSWORD = "' + pwd + '"',
+        	    function (error, results, fields) {
+        
             if (error) throw error;
             console.log(results);
             reply(results);
@@ -179,15 +199,15 @@ server.route({
 
     },
     config: {
-        validate: {
-            payload: {
-                uid: Joi.number().integer(),
-                message: [Joi.string(), Joi.number()]
-            }
+    	cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
         }
+       
 
     }
 });
+
 
 server.route({
     method: 'POST',
