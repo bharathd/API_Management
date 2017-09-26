@@ -59,7 +59,7 @@ server.route({
  path: '/projects',
  handler: function (request, reply) {
 
-     connection.query('SELECT  project.PROJECT_ID, project.PROJECT_NAME,project.PROJECT_DESCRIPTION, project_detail.PROJECT_Duration, project_detail.TEAM_SIZE, project_detail.PROJECT_TEAM_MEMBER FROM project INNER JOIN project_detail ON project.PROJECT_ID=project_detail.PROJECT_ID;', function (error, results, fields) {
+     connection.query('SELECT  project.PROJECT_ID, project.PROJECT_NAME,project.PROJECT_DESCRIPTION, project_detail.PROJECT_SPRINT, project_detail.PROJECT_DOCUMENTS, project_detail.PROJECT_Duration, project_detail.TEAM_SIZE, project_detail.PROJECT_TEAM_MEMBER,project_detail.PROJECT_TEAM_MEMBER_ID FROM project INNER JOIN project_detail ON project.PROJECT_ID=project_detail.PROJECT_ID;', function (error, results, fields) {
          if (error) throw error;
          console.log(results);
          reply(results);
