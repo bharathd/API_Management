@@ -53,6 +53,25 @@ server.route({
         }
     }
 });
+server.route({
+    method: 'GET',
+    path: '/employeelist',
+    handler: function (request, reply) {
+
+        connection.query('select * from employee', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+        cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
+    }
+});
 //Add the route
 server.route({
  method: 'GET',
