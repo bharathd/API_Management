@@ -12,7 +12,8 @@ const connection = MySQL.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'pmpd'
+    database: 'pmpd',
+    multipleStatements: true
 });
 
 
@@ -162,7 +163,46 @@ console.log(username);
 
     }
 });
+server.route({
+    method: 'POST',
+    path: '/addproject',
 
+    handler: function (request, reply) {
+
+        const project_name = request.payload.qid.PROJECT_NAME;
+        const project_description = request.payload.qid.PROJECT_DESCRIPTION;
+        const user_id = 1;
+        const project_Duration = request.payload.qid.PROJECT_DURATION;
+        const project_startdate = request.payload.qid.PROJECT_START_DATE;
+        const project_enddate = request.payload.qid.PROJECT_END_DATE;
+        const project_tools = request.payload.qid.PROJECT_TOOLS_USED;
+        const project_teammember = request.payload.qid.PROJECT_TEAM_MEMBER_ID;
+        const project_scrum = request.payload.qid.PROJECT_SCRUM;
+        const project_document = request.payload.qid.PROJECT_DOCUMENTS;
+        const project_sprint = request.payload.qid.PROJECT_SPRINT;
+         
+console.log(project_name+"---");
+connection.query('INSERT INTO project (PROJECT_NAME,PROJECT_DESCRIPTION,USER_ID) VALUES ("' + project_name  + '","' + project_description + '","' + user_id+ '")',function (error, results, fields) {
+            if (error) throw error;
+            else{
+            	const project_id = results.insertId;
+            	connection.query('INSERT INTO project_detail (PROJECT_ID,TEAM_SIZE,PROJECT_DURATION,PROJECT_START_DATE,PROJECT_END_DATE,PROJECT_TOOLS_USED,PROJECT_TEAM_MEMBER_ID,PROJECT_SCRUM,PROJECT_DOCUMENTS,PROJECT_SPRINT) VALUES ("' + project_id + '","'+ 5 + '","'+ project_Duration  + '","'  + project_startdate  + '","' + project_enddate  + '","' + project_tools  + '","' + project_teammember  + '","' + project_scrum  + '","' + project_document + '","'  + project_sprint+ '")',function (error, results, fields) {
+            		
+            	});
+            }
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+    	 cors: {
+             origin: ['*'],
+             additionalHeaders: ['cache-control', 'x-requested-with']
+         }
+
+    }
+});
 server.route({
     method: 'POST',
     path: '/signup',
@@ -200,7 +240,31 @@ console.log(username);
 
     }
 });
+server.route({
+    method: 'POST',
+    path: '/getemployeefilterlist',
 
+    handler: function (request, reply) {
+        const qid = "%"+request.payload.qid+"%";
+        console.log("QA"+qid);
+        connection.query ('select * from employee where TECHNOLOGY  like "' + qid + '"',
+        	    function (error, results, fields) {
+        
+            if (error) throw error;
+            console.log(results);
+            reply(results);
+        });
+
+    },
+    config: {
+    	cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
+       
+
+    }
+});
 server.route({
     method: 'POST',
     path: '/gettechnoloyQA',
