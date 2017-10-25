@@ -1,0 +1,23 @@
+use pmpd;
+SET FOREIGN_KEY_CHECKS = 1;
+ALTER TABLE project_detail MODIFY PROJECT_DETAIL_ID INT  AUTO_INCREMENT; 
+ALTER TABLE tbl ADD id INT PRIMARY KEY AUTO_INCREMENT;
+ALTER TABLE project AUTO_INCREMENT=1;
+BEGIN;
+INSERT INTO project (PROJECT_NAME, PROJECT_DESCRIPTION,USER_ID)
+  VALUES('PWC', 'IOS11 MIGRATION',1);
+INSERT INTO project_detail (PROJECT_DETAIL_ID, PROJECT_ID) 
+  VALUES(LAST_INSERT_ID(),1);
+COMMIT;	
+
+select * from employee where TECHNOLOGY  like '%TEST%';
+TRUNCATE TABLE project_detail;
+delete from project_detail;
+select * from project_detail
+select * from  project_detail technology_details where TECHNOLOGY_ID=3
+
+ALTER TABLE project_detail
+ADD PROJECT_SPRINT VARCHAR(255);
+COMMIT
+
+SELECT * FROM employee;
